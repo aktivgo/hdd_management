@@ -25,9 +25,9 @@ void getDrivesInfo() {
         if ((drives & p) != 0) {
             char diskLetter = 'A' + i;
             string path = diskLetter + (string) ":\\";
-            cout << "Диск: " << path << endl;
+            cout << "Disk: " << path << endl;
             wstring wPath = wstring(path.begin(), path.end());
-            cout << "Тип: " << getDriveType(wPath.c_str()) << endl;
+            cout << "Type: " << getDriveType(wPath.c_str()) << endl;
 
             char nameBuffer[100];
             char fileSystemBuffer[100];
@@ -35,11 +35,11 @@ void getDrivesInfo() {
 
             if (GetVolumeInformationA(path.c_str(), nameBuffer, sizeof(nameBuffer), &driveSN, nullptr, nullptr,
                                       fileSystemBuffer, sizeof(fileSystemBuffer))) {
-                cout << "Метка тома: " << nameBuffer << endl;
-                cout << "Файлова система: " << fileSystemBuffer << endl;
-                cout << "Серийный номер: " << fromDecToHex(driveSN) << endl;
+                cout << "Volume label: " << nameBuffer << endl;
+                cout << "File system: " << fileSystemBuffer << endl;
+                cout << "Serial number: " << fromDecToHex(driveSN) << endl;
             } else {
-                cout << "Ошибка при определении информации о метке тома, файловой системе и серийного номера" << endl;
+                cout << "Error in determining information about the volume label, serial number file system" << endl;
             }
 
             DWORD secPerClus;
@@ -48,16 +48,16 @@ void getDrivesInfo() {
             DWORD totalClus;
             if (GetDiskFreeSpace(reinterpret_cast<LPCSTR>(wPath.c_str()),
                                  &secPerClus, &bytePerSec, &freeClus, &totalClus)) {
-                cout << "Всего: "
+                cout << "Total: "
                      << ((double) totalClus * secPerClus * bytePerSec) / 1024 / 1024 / 1024 << " Gb" << endl;
-                cout << "Занято: "
+                cout << "Used: "
                      <<
                      (((double) totalClus * secPerClus * bytePerSec) - ((double) freeClus * secPerClus * bytePerSec)) /
                      1024 / 1024 / 1024 << " Gb" << endl;
-                cout << "Свободно: "
+                cout << "Free: "
                      << ((double) freeClus * secPerClus * bytePerSec) / 1024 / 1024 / 1024 << " Gb\n" << endl;
             } else {
-                cout << "Ошибка при определении информации о объёме занятого и свободного пространства" << endl;
+                cout << "Error in determining information about the amount of used and free space" << endl;
             }
         }
     }
@@ -101,20 +101,20 @@ string switchDecToHex(unsigned int num) {
 string getDriveType(LPCWSTR path) {
     switch (GetDriveType(reinterpret_cast<LPCSTR>(path))) {
         case 0:
-            return "Тип диска определить не удалось";
+            return "The disk type could not be determined";
         case 1:
-            return "Корневой директории не существует";
+            return "The root directory does not exist";
         case 2:
-            return "Сменный диск";
+            return "Removable disk";
         case 3:
-            return "Жёсткий диск";
+            return "Hard drive";
         case 4:
-            return "Сетевой диск";
+            return "Network Drive";
         case 5:
             return "CD-ROM";
         case 6:
-            return "Виртуальный диск";
+            return "Virtual Disk";
         default:
-            return "Ошибка при определении типа диска";
+            return "Error in determining the disk type";
     }
 }
